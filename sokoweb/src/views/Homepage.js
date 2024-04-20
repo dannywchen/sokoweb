@@ -11,6 +11,7 @@ const SceneContainer = styled.div`
 
 const Homepage = () => {
   const mountRef = useRef(null);
+  const scrollRef = useRef(0);
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -24,13 +25,13 @@ const Homepage = () => {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor("#e5e5e5");
+    renderer.setClearColor("#1a1a1a"); // Dark background color
     mountRef.current.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
+    controls.enableZoom = false;
     controls.enablePan = false; // Right click does nothing
 
     const loader = new GLTFLoader();
@@ -56,15 +57,24 @@ const Homepage = () => {
     const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
     scene.add(light);
 
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset;
+      const scrollDiff = scrollTop - scrollRef.current;
+      camera.position.y += scrollDiff * 0.03; // Adjust the parallax effect strength
+      scrollRef.current = scrollTop;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
       renderer.render(scene, camera);
     };
-
     animate();
 
     return () => {
+      window.removeEventListener("scroll", handleScroll);
       mountRef.current.removeChild(renderer.domElement);
     };
   }, []);
