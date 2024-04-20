@@ -5,6 +5,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import styled, { keyframes } from "styled-components";
+import { gsap } from "gsap"; // Import GSAP library
 
 const SceneContainer = styled.div`
   width: 100vw;
@@ -62,27 +63,33 @@ const BentoBox = styled.div`
 
 const Homepage = () => {
   const mountRef = useRef(null);
+  const textRef = useRef(null);
 
   useEffect(() => {
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#f0e6f6");
-
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 50;
+    camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor("#f0e6f6"); // Set to a pastel color background
     mountRef.current.appendChild(renderer.domElement);
+
+    // Load the cloud texture
+    const cloudTextureLoader = new THREE.TextureLoader();
+    const cloudTexture = cloudTextureLoader.load(
+      "/models/scene/textures/nuven_baseColor.png"
+    );
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
+    controls.enableZoom = false;
     controls.enablePan = false;
 
     const loader = new GLTFLoader();
@@ -90,7 +97,35 @@ const Homepage = () => {
     loader.load(
       "scene.gltf",
       (gltf) => {
+        gltf.scene.traverse((object) => {
+          if (object.isMesh) object.material.map = cloudTexture;
+        });
         scene.add(gltf.scene);
+
+        // Add text to the 3D model
+        const fontLoader = new FontLoader();
+        fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
+          const textGeometry = new TextGeometry("Soko's Magical Journey", {
+            font: font,
+            size: 0.5,
+            height: 0.1,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 0.03,
+            bevelSize: 0.02,
+            bevelOffset: 0,
+            bevelSegments: 5,
+          });
+
+          const textMaterial = new THREE.MeshPhongMaterial({
+            color: 0xffb6c1, // Pastel color
+            flatShading: true,
+          });
+          const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+          textMesh.position.set(0, 2, 0);
+          textRef.current = textMesh;
+          scene.add(textMesh);
+        });
       },
       undefined,
       (error) => {
@@ -101,46 +136,37 @@ const Homepage = () => {
     const light = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
     scene.add(light);
 
-    // Load the font and create text
-    const fontLoader = new FontLoader();
-    fontLoader.load(
-      `${process.env.PUBLIC_URL}/fonts/font.json`,
-      function (font) {
-        const textGeometry = new TextGeometry("Soko journey", {
-          font: font,
-          size: 10,
-          height: 2,
-          curveSegments: 12,
-          bevelEnabled: true,
-          bevelThickness: 1,
-          bevelSize: 0.8,
-          bevelSegments: 5,
-        });
-
-        const textMaterial = new THREE.MeshPhongMaterial({
-          color: 0x123456,
-          specular: 0xffffff,
-        });
-        const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-        textMesh.position.set(-30, 0, 0);
-        scene.add(textMesh);
-      },
-      undefined,
-      (error) => {
-        console.error("An error occurred while loading the font:", error);
-      }
-    );
-
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
       renderer.render(scene, camera);
     };
-
     animate();
+
+    const handleScroll = () => {
+      const scrollPosition = window.pageYOffset;
+      const scrollThreshold = 100; // Adjust this value to change when the animation starts
+
+      if (scrollPosition > scrollThreshold && textRef.current) {
+        gsap.to(textRef.current.position, {
+          y: -2,
+          duration: 1,
+          ease: "power2.out",
+        });
+      } else if (scrollPosition <= scrollThreshold && textRef.current) {
+        gsap.to(textRef.current.position, {
+          y: 2,
+          duration: 1,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
       mountRef.current.removeChild(renderer.domElement);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
