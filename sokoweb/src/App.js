@@ -5,7 +5,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import NavBar from "./components/NavBar";
 import Homepage from "./views/Homepage";
 import Artpage from "./views/Artpage";
-import LifeStory from "./views/LifeStory"; // Make sure this path is correct
+import LifeStory from "./views/LifeStory";
 import Scroller from "./components/Scroller";
 import FakeLoader from "./components/FakeLoader";
 

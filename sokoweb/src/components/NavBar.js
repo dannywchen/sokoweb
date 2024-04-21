@@ -99,7 +99,7 @@ const NavBar = () => {
           <NavItem>About</NavItem>
           <NavItem>Gallery</NavItem>
           <NavItem>Facts</NavItem>
-          {/* Add other nav items as needed */}
+          {/* add more */}
         </NavItems>
         <Icons>
           <SearchIcon />
