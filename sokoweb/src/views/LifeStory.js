@@ -1,7 +1,8 @@
 // LifeStory.js
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import VerticalNav from "../components/VerticalNav";
+import { gsap } from "gsap";
 
 const LifeStoryContainer = styled.div`
   width: 100vw;
@@ -33,6 +34,16 @@ const DescriptionMessage = styled.div`
 `;
 
 const LifeStory = () => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    gsap.from(containerRef.current, {
+      opacity: 0,
+      duration: 1.5,
+      ease: "power2.inOut",
+    });
+  }, []);
+
   const dotPositions = [
     { top: "20%", left: "30%" },
     { top: "50%", left: "60%" },
@@ -54,7 +65,7 @@ const LifeStory = () => {
   };
 
   return (
-    <LifeStoryContainer>
+    <LifeStoryContainer ref={containerRef}>
       <VerticalNav />
       {dotPositions.map((position, index) => (
         <Dot

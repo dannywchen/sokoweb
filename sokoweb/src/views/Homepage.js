@@ -4,7 +4,6 @@ import styled, { keyframes } from "styled-components";
 import { gsap } from "gsap";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import LifeStory from "./LifeStory";
 import { useNavigate } from "react-router-dom";
 
 const SceneContainer = styled.div`
@@ -31,7 +30,6 @@ const BackgroundImage = styled.div`
   background-size: cover;
   background-position: center;
   clip-path: circle(150px at center);
-  filter: blur(2px);
   transition: transform 0.3s ease-out;
 `;
 
@@ -135,12 +133,26 @@ const Curtain = styled.div`
   align-items: center;
 `;
 
+const LifeStoryContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/background1.png");
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+`;
+
 const Homepage = () => {
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
-  const [showLifeStory, setShowLifeStory] = useState(false);
   const circleRef = useRef(null);
   const threeRef = useRef(null);
   const backgroundRef = useRef(null);
+  const lifeStoryRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -186,8 +198,6 @@ const Homepage = () => {
       const y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       if (backgroundRef.current) {
-        backgroundRef.current.style.backgroundPositionX = `${x * 50}px`;
-        backgroundRef.current.style.backgroundPositionY = `${y * 50}px`;
         backgroundRef.current.style.transform = `scale(1.1) translate(${
           x * 20
         }px, ${y * 20}px)`;
@@ -201,15 +211,30 @@ const Homepage = () => {
     };
   }, []);
 
+  const handleExploreHover = () => {
+    gsap.to(lifeStoryRef.current, {
+      opacity: 1,
+      duration: 0.5,
+      ease: "power2.inOut",
+    });
+  };
+
+  const handleExploreLeave = () => {
+    gsap.to(lifeStoryRef.current, {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.inOut",
+    });
+  };
+
   const handleExploreClick = () => {
-    const circleContainer = document.querySelector(CircleContainer);
-    gsap.to(circleContainer, {
+    const sceneContainer = document.querySelector(SceneContainer);
+    gsap.to(sceneContainer, {
       scale: 20,
       duration: 1.5,
       ease: "power2.inOut",
       onComplete: () => {
-        setShowLifeStory(true);
-        navigate("/lifestory");
+        navigate("/LifeStory");
       },
     });
   };
@@ -225,12 +250,19 @@ const Homepage = () => {
             <TitleRight>JOURNEY</TitleRight>
             <ButtonContainer>
               <Button>BOOKS</Button>
-              <Button onClick={handleExploreClick}>EXPLORE</Button>
+              <Button
+                onMouseEnter={handleExploreHover}
+                onMouseLeave={handleExploreLeave}
+                onClick={handleExploreClick}
+              >
+                EXPLORE
+              </Button>
             </ButtonContainer>
             <CircleContainer ref={circleRef}>
               <CircleMask />
               <div ref={threeRef} />
             </CircleContainer>
+            <LifeStoryContainer ref={lifeStoryRef} />
           </>
         )}
       </SceneContainer>
