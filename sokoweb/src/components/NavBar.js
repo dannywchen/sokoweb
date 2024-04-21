@@ -92,13 +92,13 @@ const NavBar = () => {
     <>
       <GlobalStyle />
       <Nav>
-        <Logo>🍎Vision Pro</Logo>
+        <Logo>🍎Sokolovski</Logo>
         <NavItems>
-          <NavItem>Store</NavItem>
-          <NavItem>Mac</NavItem>
-          <NavItem>iPad</NavItem>
-          <NavItem>iPhone</NavItem>
-          <NavItem>Watch</NavItem>
+          <NavItem>Home</NavItem>
+          <NavItem>Art</NavItem>
+          <NavItem>About</NavItem>
+          <NavItem>Gallery</NavItem>
+          <NavItem>Facts</NavItem>
           {/* Add other nav items as needed */}
         </NavItems>
         <Icons>
