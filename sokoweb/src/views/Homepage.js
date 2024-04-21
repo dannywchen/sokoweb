@@ -5,11 +5,11 @@ import { gsap } from "gsap";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import LifeStory from "./LifeStory";
-import NavBar from "../components/NavBar.js";
+import { useNavigate } from "react-router-dom";
 
 const SceneContainer = styled.div`
   width: 100vw;
-  height: calc(100vh - 60px);
+  height: 100vh;
   background-image: url("/images/background2.png");
   background-size: cover;
   background-position: center;
@@ -18,17 +18,33 @@ const SceneContainer = styled.div`
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-top: 60px; // Add margin top to position the background image below the navbar
+  position: relative;
 `;
 
-const TitleAnimation = keyframes`
+const BackgroundImage = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/images/background1.png");
+  background-size: cover;
+  background-position: center;
+  clip-path: circle(150px at center);
+  filter: blur(2px);
+  transition: transform 0.3s ease-out;
+`;
+
+const titleAnimation = keyframes`
   0% {
     opacity: 0;
     transform: translateY(50px);
+    filter: blur(10px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
   }
 `;
 
@@ -38,11 +54,12 @@ const TitleLeft = styled.h1`
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   opacity: 0;
-  animation: ${TitleAnimation} 1s ease-out forwards;
+  animation: ${titleAnimation} 1s ease-out forwards;
   position: absolute;
   left: 20%;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 1;
 `;
 
 const TitleRight = styled.h1`
@@ -51,11 +68,12 @@ const TitleRight = styled.h1`
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   opacity: 0;
-  animation: ${TitleAnimation} 1s ease-out forwards;
+  animation: ${titleAnimation} 1s ease-out forwards;
   position: absolute;
   right: 20%;
   top: 50%;
   transform: translateY(-50%);
+  z-index: 1;
 `;
 
 const ButtonContainer = styled.div`
@@ -64,6 +82,9 @@ const ButtonContainer = styled.div`
   width: 300px;
   position: absolute;
   bottom: 20%;
+  z-index: 1;
+  opacity: 0;
+  animation: ${titleAnimation} 1s ease-out forwards;
 `;
 
 const Button = styled.button`
@@ -85,6 +106,9 @@ const CircleContainer = styled.div`
   border-radius: 50%;
   overflow: hidden;
   z-index: 1;
+  border: 2px solid #fff;
+  opacity: 0;
+  animation: ${titleAnimation} 1s ease-out forwards;
 `;
 
 const CircleMask = styled.div`
@@ -93,8 +117,9 @@ const CircleMask = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.5);
   clip-path: circle(150px at center);
+  filter: blur(2px);
 `;
 
 const Curtain = styled.div`
@@ -115,6 +140,8 @@ const Homepage = () => {
   const [showLifeStory, setShowLifeStory] = useState(false);
   const circleRef = useRef(null);
   const threeRef = useRef(null);
+  const backgroundRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const curtain = document.querySelector(Curtain);
@@ -128,7 +155,6 @@ const Homepage = () => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 300 / 300, 0.1, 1000);
     camera.position.z = 5;
-
     const renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setSize(300, 300);
 
@@ -152,14 +178,20 @@ const Homepage = () => {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
     };
+
     animate();
 
     const handlePointerMove = (event) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = -(event.clientY / window.innerHeight) * 2 + 1;
-      camera.position.x = x * 2;
-      camera.position.y = y * 2;
-      camera.lookAt(0, 0, 0);
+
+      if (backgroundRef.current) {
+        backgroundRef.current.style.backgroundPositionX = `${x * 50}px`;
+        backgroundRef.current.style.backgroundPositionY = `${y * 50}px`;
+        backgroundRef.current.style.transform = `scale(1.1) translate(${
+          x * 20
+        }px, ${y * 20}px)`;
+      }
     };
 
     window.addEventListener("pointermove", handlePointerMove);
@@ -175,18 +207,17 @@ const Homepage = () => {
       scale: 20,
       duration: 1.5,
       ease: "power2.inOut",
-      onComplete: () => setShowLifeStory(true),
+      onComplete: () => {
+        setShowLifeStory(true);
+        navigate("/lifestory");
+      },
     });
   };
 
-  if (showLifeStory) {
-    return <LifeStory />;
-  }
-
   return (
     <>
-      <NavBar />
       <SceneContainer>
+        <BackgroundImage ref={backgroundRef} />
         {!isAnimationComplete && <Curtain />}
         {isAnimationComplete && (
           <>
