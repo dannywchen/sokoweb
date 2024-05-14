@@ -1,52 +1,65 @@
-/* Disable default scrollbar */
-html,
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  font-family: Arial, sans-serif;
+}
+
+/* Custom vertical scrollbar */
 body {
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
-  overflow: -moz-scrollbars-none; /* Older Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #a1d2ce #f7d7ff; /* Firefox */
 }
 
-body::-webkit-scrollbar,
-html::-webkit-scrollbar {
-  width: 0 !important;
-  display: none; /* For Chrome, Safari, and Opera */
+body::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
 }
 
-.App {
-  text-align: center;
+body::-webkit-scrollbar-track {
+  background: #f7d7ff; /* Track color */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body::-webkit-scrollbar-thumb {
+  background-color: #a1d2ce; /* Scrollbar color */
+  border-radius: 20px; /* Rounded corners */
+  border: 3px solid #f7d7ff; /* Padding around thumb */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+
+.video-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  z-index: 9999;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#loading-video {
+  width: 100%;
+  height: auto;
+}
+
+.main-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100vh;
+  background: #f0f0f0;
+  color: #333;
 }
 
-.App-link {
-  color: #61dafb;
+.main-content h1 {
+  font-size: 3em;
+  margin: 0.5em 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.main-content p {
+  font-size: 1.5em;
 }
