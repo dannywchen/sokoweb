@@ -44,8 +44,8 @@ const Video = styled.video`
 const SceneContainer = styled.div`
   width: 100vw;
   height: 100vh;
-  max-width: 100%; /* Ensure no horizontal scroll */
-  background-image: url("/images/background2.png");
+  max-width: 100%;
+  background-image: url("/images/background3.png");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -63,7 +63,7 @@ const BackgroundImage = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("/images/background1.png");
+  background-image: url("/images/background3.png");
   background-size: cover;
   background-position: center;
   clip-path: circle(150px at center);
@@ -85,7 +85,7 @@ const titleAnimation = keyframes`
 
 const TitleLeft = styled.h1`
   font-size: 4rem;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   opacity: 0;
@@ -99,7 +99,7 @@ const TitleLeft = styled.h1`
 
 const TitleRight = styled.h1`
   font-size: 4rem;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   opacity: 0;
@@ -124,11 +124,20 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   font-size: 1.5rem;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Raleway", sans-serif;
   color: #fff;
-  background-color: transparent;
-  border: none;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid #fff;
+  border-radius: 5px;
+  padding: 10px 20px;
   cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  }
 `;
 
 const CircleContainer = styled.div`
@@ -176,7 +185,7 @@ const LifeStoryContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("/images/background1.png");
+  background-image: url("/images/background3.png");
   background-size: cover;
   background-position: center;
   opacity: 0;
