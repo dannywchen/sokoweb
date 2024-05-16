@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { gsap } from "gsap";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import SideNav from "../components/SideNav";
 
 const fadeIn = keyframes`
@@ -39,7 +40,7 @@ const Video = styled.video`
   object-fit: cover;
 `;
 
-const SceneContainer = styled.div`
+const SceneContainer = styled(motion.div)`
   width: 100vw;
   height: 100vh;
   max-width: 100%;
@@ -81,29 +82,29 @@ const titleAnimation = keyframes`
 `;
 
 const TitleLeft = styled.h1`
-  font-size: 6rem;
+  font-size: 10rem;
   font-family: "Indie Flower", cursive;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   opacity: 0;
   animation: ${titleAnimation} 1s ease-out forwards;
   position: absolute;
-  left: 35%;
-  top: 50%;
+  left: 15%;
+  top: 25%;
   transform: translateY(-50%);
   z-index: 1;
 `;
 
 const TitleRight = styled.h1`
-  font-size: 6rem;
+  font-size: 10rem;
   font-family: "Indie Flower", cursive;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   opacity: 0;
   animation: ${titleAnimation} 1s ease-out forwards;
   position: absolute;
-  right: 35%;
-  top: 50%;
+  right: 25%;
+  top: 35%;
   transform: translateY(-50%);
   z-index: 1;
 `;
@@ -111,16 +112,16 @@ const TitleRight = styled.h1`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 300px;
+  width: 400px;
   position: absolute;
-  bottom: 20%;
+  bottom: 30%;
   z-index: 1;
   opacity: 0;
   animation: ${titleAnimation} 1s ease-out forwards;
 `;
 
 const Button = styled.button`
-  font-size: 1.5rem;
+  font-size: 3rem;
   font-family: "Indie Flower", cursive;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.6);
@@ -143,7 +144,7 @@ const Curtain = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #b0e0e6;
+  background-color: #836953;
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -219,14 +220,14 @@ const Homepage = () => {
     });
   };
 
-  const handleExploreClick = () => {
+  const handleExploreClick = (page) => {
     const sceneContainer = document.querySelector(SceneContainer);
     gsap.to(sceneContainer, {
-      scale: 20,
+      opacity: 0,
       duration: 1.5,
       ease: "power2.inOut",
       onComplete: () => {
-        navigate("/LifeStory");
+        navigate(`/${page}`);
       },
     });
   };
@@ -242,21 +243,25 @@ const Homepage = () => {
           </Video>
         </VideoContainer>
       )}
-      <SceneContainer>
+      <SceneContainer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <BackgroundImage ref={backgroundRef} />
         {!isAnimationComplete && <Curtain />}
         {isAnimationComplete && (
           <>
-            <TitleLeft>SOKO</TitleLeft>
-            <TitleRight>JOURNEY</TitleRight>
+            <TitleLeft>SOKOLOVSKI'S</TitleLeft>
+            <TitleRight>ADVENTURE</TitleRight>
             <ButtonContainer>
-              <Button>BOOKS</Button>
+              <Button onClick={() => handleExploreClick("LifeStory")}>Story</Button>
               <Button
                 onMouseEnter={handleExploreHover}
                 onMouseLeave={handleExploreLeave}
-                onClick={handleExploreClick}
+                onClick={() => handleExploreClick("ArtPage.js")}
               >
-                EXPLORE
+                Art
               </Button>
             </ButtonContainer>
             <LifeStoryContainer ref={lifeStoryRef} />
