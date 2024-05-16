@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
 import { gsap } from "gsap";
-import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useNavigate } from "react-router-dom";
 import SideNav from "../components/SideNav";
 
@@ -66,7 +64,6 @@ const BackgroundImage = styled.div`
   background-image: url("/images/background3.png");
   background-size: cover;
   background-position: center;
-  clip-path: circle(150px at center);
   transition: transform 0.3s ease-out;
 `;
 
@@ -84,28 +81,28 @@ const titleAnimation = keyframes`
 `;
 
 const TitleLeft = styled.h1`
-  font-size: 4rem;
-  font-family: "Raleway", sans-serif;
+  font-size: 6rem;
+  font-family: "Indie Flower", cursive;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   opacity: 0;
   animation: ${titleAnimation} 1s ease-out forwards;
   position: absolute;
-  left: 20%;
+  left: 35%;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
 `;
 
 const TitleRight = styled.h1`
-  font-size: 4rem;
-  font-family: "Raleway", sans-serif;
+  font-size: 6rem;
+  font-family: "Indie Flower", cursive;
   color: #fff;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   opacity: 0;
   animation: ${titleAnimation} 1s ease-out forwards;
   position: absolute;
-  right: 20%;
+  right: 35%;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
@@ -124,7 +121,7 @@ const ButtonContainer = styled.div`
 
 const Button = styled.button`
   font-size: 1.5rem;
-  font-family: "Raleway", sans-serif;
+  font-family: "Indie Flower", cursive;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.6);
   border: 2px solid #fff;
@@ -138,32 +135,6 @@ const Button = styled.button`
     background-color: rgba(0, 0, 0, 0.8);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
   }
-`;
-
-const CircleContainer = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  overflow: hidden;
-  z-index: 1;
-  border: 2px solid #fff;
-  opacity: 0;
-  animation: ${titleAnimation} 1s ease-out forwards;
-`;
-
-const CircleMask = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  clip-path: circle(150px at center);
-  filter: blur(2px);
 `;
 
 const Curtain = styled.div`
@@ -197,8 +168,6 @@ const Homepage = () => {
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const videoRef = useRef(null);
-  const circleRef = useRef(null);
-  const threeRef = useRef(null);
   const backgroundRef = useRef(null);
   const lifeStoryRef = useRef(null);
   const navigate = useNavigate();
@@ -215,35 +184,6 @@ const Homepage = () => {
           ease: "power2.inOut",
           onComplete: () => setIsAnimationComplete(true),
         });
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, 300 / 300, 0.1, 1000);
-        camera.position.z = 5;
-        const renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize(300, 300);
-
-        if (threeRef.current) {
-          threeRef.current.appendChild(renderer.domElement);
-        }
-
-        const loader = new GLTFLoader();
-        loader.load(
-          "/models/scene/scene.gltf",
-          (gltf) => {
-            scene.add(gltf.scene);
-          },
-          undefined,
-          (error) => {
-            console.error("Error loading GLTF model:", error);
-          }
-        );
-
-        const animate = () => {
-          requestAnimationFrame(animate);
-          renderer.render(scene, camera);
-        };
-
-        animate();
       };
     }
 
@@ -319,10 +259,6 @@ const Homepage = () => {
                 EXPLORE
               </Button>
             </ButtonContainer>
-            <CircleContainer ref={circleRef}>
-              <CircleMask />
-              <div ref={threeRef} />
-            </CircleContainer>
             <LifeStoryContainer ref={lifeStoryRef} />
           </>
         )}
