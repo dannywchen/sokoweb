@@ -95,7 +95,6 @@ const LifeStory = () => {
   const [visibleSentences, setVisibleSentences] = useState([]);
   const [isPart2, setIsPart2] = useState(false);
   const [showButton, setShowButton] = useState(false);
-  const [curtainVisible, setCurtainVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -115,9 +114,7 @@ const LifeStory = () => {
 
   const handleTransition = () => {
     setShowButton(false);
-    setCurtainVisible(true);
     setTimeout(() => {
-      setCurtainVisible(false);
       setVisibleSentences([]);
       setIsPart2(true);
     }, 500); 
@@ -127,7 +124,7 @@ const LifeStory = () => {
     <>
       <NavBar />
       <Container>
-        <Title>SOKOS nature</Title>
+        <Title>Nature's Serenity</Title>
         <AnimatePresence>
           {visibleSentences.map((sentence, index) => (
             <SentenceContainer
@@ -159,7 +156,7 @@ const LifeStory = () => {
           </AnimatePresence>
         )}
         <AnimatePresence>
-          {curtainVisible && (
+          {isPart2 && (
             <motion.div
               initial="hidden"
               animate="visible"
