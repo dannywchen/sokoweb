@@ -25,7 +25,7 @@ const SideNavContainer = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: ${({ isOpen }) => (isOpen ? '250px' : '60px')};
+  width: ${({ $isOpen }) => ($isOpen ? '250px' : '60px')};
   height: 100%;
   background-color: #333;
   color: white;
@@ -34,9 +34,9 @@ const SideNavContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   z-index: 999;
-  transform: ${({ isOpen }) => (isOpen ? 'translateX(0)' : 'translateX(-100%)')};
+  transform: ${({ $isOpen }) => ($isOpen ? 'translateX(0)' : 'translateX(-100%)')};
   transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
-  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.3s forwards;
+  animation: ${({ $isOpen }) => ($isOpen ? slideIn : slideOut)} 0.3s forwards;
 `;
 
 const HamburgerIcon = styled(GiHamburgerMenu)`
@@ -68,12 +68,12 @@ const NavItem = styled.a`
 
 const IconWrapper = styled.div`
   font-size: 1.5rem;
-  margin-right: ${({ isOpen }) => (isOpen ? '1rem' : '0')};
+  margin-right: ${({ $isOpen }) => ($isOpen ? '1rem' : '0')};
   transition: margin-right 0.3s;
 `;
 
 const NavLabel = styled.span`
-  display: ${({ isOpen }) => (isOpen ? 'inline' : 'none')};
+  display: ${({ $isOpen }) => ($isOpen ? 'inline' : 'none')};
   transition: display 0.3s;
 `;
 
@@ -86,27 +86,27 @@ const SideNav = () => {
 
   return (
     <>
-      <SideNavContainer isOpen={isOpen}>
+      <SideNavContainer $isOpen={isOpen}>
         <HamburgerIcon onClick={toggleNav} />
         <NavItem href="#home">
-          <IconWrapper isOpen={isOpen}><FaHome /></IconWrapper>
-          <NavLabel isOpen={isOpen}>Home</NavLabel>
+          <IconWrapper $isOpen={isOpen}><FaHome /></IconWrapper>
+          <NavLabel $isOpen={isOpen}>Home</NavLabel>
         </NavItem>
         <NavItem href="#books">
-          <IconWrapper isOpen={isOpen}><FaBook /></IconWrapper>
-          <NavLabel isOpen={isOpen}>Books</NavLabel>
+          <IconWrapper $isOpen={isOpen}><FaBook /></IconWrapper>
+          <NavLabel $isOpen={isOpen}>Books</NavLabel>
         </NavItem>
         <NavItem href="#explore">
-          <IconWrapper isOpen={isOpen}><FaGlobe /></IconWrapper>
-          <NavLabel isOpen={isOpen}>Explore</NavLabel>
+          <IconWrapper $isOpen={isOpen}><FaGlobe /></IconWrapper>
+          <NavLabel $isOpen={isOpen}>Explore</NavLabel>
         </NavItem>
         <NavItem href="#team">
-          <IconWrapper isOpen={isOpen}><FaUsers /></IconWrapper>
-          <NavLabel isOpen={isOpen}>Team</NavLabel>
+          <IconWrapper $isOpen={isOpen}><FaUsers /></IconWrapper>
+          <NavLabel $isOpen={isOpen}>Team</NavLabel>
         </NavItem>
         <NavItem href="#faq">
-          <IconWrapper isOpen={isOpen}><FaQuestionCircle /></IconWrapper>
-          <NavLabel isOpen={isOpen}>FAQ</NavLabel>
+          <IconWrapper $isOpen={isOpen}><FaQuestionCircle /></IconWrapper>
+          <NavLabel $isOpen={isOpen}>FAQ</NavLabel>
         </NavItem>
       </SideNavContainer>
     </>
