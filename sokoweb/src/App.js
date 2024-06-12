@@ -1,12 +1,12 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import styled, { createGlobalStyle } from 'styled-components';
-import SideNav from './components/SideNav';
-import NavBar from './components/NavBar';
-import Homepage from './views/Homepage';
-import Artpage from './views/Artpage';
-import LifeStory from './views/LifeStory';
-import Scroller from './components/Scroller';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
+import SideNav from "./components/SideNav";
+import NavBar from "./components/NavBar";
+import Homepage from "./views/Homepage";
+import Artpage from "./views/Artpage";
+import LifeStory from "./views/LifeStory";
+import Scroller from "./components/Scroller";
 
 const GlobalStyle = createGlobalStyle`
   html, body {

@@ -193,7 +193,9 @@ const Homepage = () => {
       const y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       if (backgroundRef.current) {
-        backgroundRef.current.style.transform = `scale(1.1) translate(${x * 20}px, ${y * 20}px)`;
+        backgroundRef.current.style.transform = `scale(1.1) translate(${
+          x * 20
+        }px, ${y * 20}px)`;
       }
     };
 
@@ -255,11 +257,13 @@ const Homepage = () => {
             <TitleLeft>SOKOLOVSKI'S</TitleLeft>
             <TitleRight>ADVENTURE</TitleRight>
             <ButtonContainer>
-              <Button onClick={() => handleExploreClick("LifeStory")}>Story</Button>
+              <Button onClick={() => handleExploreClick("LifeStory")}>
+                Story
+              </Button>
               <Button
                 onMouseEnter={handleExploreHover}
                 onMouseLeave={handleExploreLeave}
-                onClick={() => handleExploreClick("ArtPage.js")}
+                onClick={() => handleExploreClick("ArtPage")}
               >
                 Art
               </Button>
