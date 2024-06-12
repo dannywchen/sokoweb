@@ -1,155 +1,294 @@
-import React, { useState, useEffect } from 'react';
-import styled, { keyframes } from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import NavBar from '../components/NavBar';
+import React, { useState, useEffect } from "react";
+import styled, { keyframes } from "styled-components";
+import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
+import NavBar from "../components/NavBar";
+
+const slideUp = keyframes`
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const flyIn = keyframes`
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) rotate(360deg);
+    opacity: 1;
+  }
+`;
 
 const Container = styled.div`
-  padding: 20px;
-  max-width: max;
+  display: flex;
+  max-width: 100%;
   margin: 0 auto;
-  font-family: 'Cormorant Garamond', serif;
-  color: #333;
   min-height: 100vh;
-  overflow-y: auto;
+  overflow: hidden;
   position: relative;
-  background: url('https://media.discordapp.net/attachments/1185428336189648917/1244499505798451291/Work_Files.png?ex=665555fb&is=6654047b&hm=3a35f754d009d60c896f51aa20776bc2555e792fa1088f07f9e6a6cc16429fc2&=&format=webp&quality=lossless&width=756&height=424') no-repeat center center fixed;
-  background-size: cover;
+  font-family: "Cormorant Garamond", serif;
+`;
+
+const ImageContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px;
+  background-color: #f1d3b2;
+  border-right: 2px solid #ccc;
+  position: relative;
+`;
+
+const ImageFrame = styled.div`
+  width: 80%;
+  position: absolute;
+  animation: ${slideUp} 1s ease-in-out forwards;
+  &.fade-out {
+    animation: ${fadeOut} 1s ease-in-out forwards;
+  }
+`;
+
+const Image = styled.img`
+  width: 100%;
+  border: 10px solid #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: rotate(${() => Math.random() * 10 - 5}deg);
+`;
+
+const TextContainer = styled.div`
+  flex: 2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #46211a;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
 `;
 
 const Title = styled.h1`
   text-align: center;
   margin-bottom: 40px;
   font-size: 5rem;
-  font-family: 'caveat', serif;
-  color: brown;
+  color: #fff5e1;
+  font-family: "Cinzel", serif;
 `;
 
 const SentenceContainer = styled(motion.div)`
   margin-bottom: 40px;
   font-size: 2rem;
-  font-style: italic;
   line-height: 1.5;
   max-width: 700px;
   text-align: center;
   margin: 0 auto;
-  font-family: 'Cormorant Garamond', serif;
-  color: #fdf5c9; 
+  color: #fff5e1;
+  font-family: "Cinzel", serif;
 `;
 
-const flyKeyframes = keyframes`
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(100vw, 100vh) scale(0); }
-`;
-
-const Star = styled.div`
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: white;
-  border-radius: 50%;
-  animation: ${flyKeyframes} 10s linear infinite;
-  top: ${() => Math.random() * 100}%;
-  left: ${() => Math.random() * 100}%;
-`;
-
-const letterVariants = {
-  hidden: { opacity: 0, x: 50, filter: 'blur(4px)' },
-  visible: (i) => ({
-    opacity: 1,
-    x: 0,
-    filter: 'blur(0px)',
-    transition: {
-      delay: i * 0.05,
-      duration: 0.5,
-      ease: 'easeOut',
-    },
-  }),
-};
-
-const sentenceVariants = {
-  hidden: { opacity: 0, x: 50, filter: 'blur(4px)' },
-  visible: {
-    opacity: 1,
-    x: 0,
-    filter: 'blur(0px)',
-    transition: {
-      duration: 0.5,
-      ease: 'easeOut',
-    },
-  },
-};
-
-const sentencesPart1 = [
-  'Elena Sokolovski always felt a deep connection to her roots.',
-  'Growing up in the Russian Federation, she was inspired by the teachers at Specialized French Gymnasium #39.',
-  'They weren\'t just educators; they were role models who nurtured kindness, honesty, independence, and hard work.',
-  'Their pedagogical skills, vast knowledge, and loving attitudes created an environment where students thrived, and Elena was no exception.',
-  'She admired them deeply and knew early on that she wanted to follow in their footsteps, becoming a teacher who could influence children\'s development in the same nurturing way.',
-];
-
-const sentencesPart2 = [
-  'Elena graduated from the Ural State Pedagogical University, armed with a degree in philology and a passion for education.',
-  'Her journey took a significant turn when she immigrated to the United States.',
-  'Despite the challenges of adapting to a new country, she found a home in the NYC Department of Education, initially as an elementary teacher.',
-  'Her perseverance and dedication soon led her to a role that felt like a dream come true—teaching Russian at one of New York\'s top schools.',
-  'In her classroom, Elena discovered that the most rewarding moments came when her students expressed their gratitude.',
-];
-
-const sentencesPart3 = [
-  'They would write heartfelt letters, sharing how much they had learned about Russia and how their knowledge had broadened their worldview.',
-  'Some spoke of continuing their Russian studies in college, while others recounted their experiences of meeting Russian-speaking people in various walks of life, feeling a sense of connection and accomplishment.',
-  'Elena cherished these stories, seeing them as proof of the impact she was making.',
-  'Elena\'s teaching style was a blend of positivity, optimism, and encouragement.',
-  'She was always open to questions and ready to help any student, understanding the challenges of learning a new language.',
-];
-
-const sentencesPart4 = [
-  'She provided extra preparation time and helpful retakes for those who struggled, emphasizing that improvement, effort, and the joy of learning were more important than scores.',
-  'She also believed in creating lasting memories, often taking class photos or videos of her students singing Russian songs, which she would share with everyone.',
-  'Her favorite aspect of Russian culture was art.',
-  'Elena enjoyed teaching various topics, from family life and famous Russian landmarks to literature and theater.',
-  'However, art held a special place in her heart.',
-];
-
-const sentencesPart5 = [
-  'She believed that art was integral to Russian culture and vital in shaping the identity of its people.',
-  'Art education, she knew, was linked to improved critical thinking, increased academic achievement, and overall well-being.',
-  'It was a powerful tool for self-expression and cultural preservation.',
-  'Her favorite artists included Impressionists like Amedeo Modigliani, Renoir, Claude Monet, and Edgar Degas.',
-  'Elena\'s teaching career was filled with memorable experiences.',
-];
-
-const Button = styled(motion.button)`
+const ArtisticButton = styled(motion.button)`
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
   font-size: 1.5rem;
   cursor: pointer;
-  background-color: #333;
+  background: linear-gradient(45deg, #6b0f1a, #b91372);
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    background: linear-gradient(45deg, #b91372, #6b0f1a);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: skewX(-45deg);
+    transition: all 0.5s;
+  }
+
+  &:before {
+    transform: skewX(-45deg) translateX(-50%);
+  }
+
+  &:after {
+    transform: skewX(-45deg) translateX(-100%);
+  }
+
+  &:hover:before {
+    transform: skewX(-45deg) translateX(100%);
+  }
+
+  &:hover:after {
+    transform: skewX(-45deg) translateX(200%);
+  }
 `;
 
-const curtainVariants = {
-  hidden: { x: '-100%' },
-  visible: { x: '0%', transition: { duration: 0.5 } },
-  exit: { x: '100%', transition: { duration: 0.5 } },
+const Confetti = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background-color: ${() => `hsl(${Math.random() * 360}, 100%, 70%)`};
+  opacity: 0.7;
+  animation: fall 10s linear infinite;
+  transform: rotate(${() => Math.random() * 360}deg);
+
+  @keyframes fall {
+    0% {
+      transform: translateY(0) rotate(${() => Math.random() * 360}deg);
+    }
+    100% {
+      transform: translateY(100vh) rotate(${() => Math.random() * 360}deg);
+    }
+  }
+`;
+
+const FlyingEmoji = styled.div`
+  position: absolute;
+  top: 100vh;
+  font-size: 2rem;
+  animation: ${flyIn} ${() => Math.random() * 5 + 5}s linear infinite;
+
+  &:nth-child(odd) {
+    animation-direction: reverse;
+  }
+`;
+
+const emojis = ["🎨", "🖼️", "🌟", "✨", "🎉"];
+
+const titles = [
+  "The Making of a Teacher in the Ural Mountains",
+  "A New Chapter in the Big Apple",
+  "The Rewards of Sharing a Passion",
+  "A Teacher's Heart and a Student's Journey",
+  "A Love Affair with Art and Culture",
+  "Memorable Moments and Unexpected Surprises",
+  "Achievements and the Pursuit of Knowledge",
+  "The Power of Optimism",
+  "Sokolovski's Special Message",
+  "A Toast to Life and Learning",
+];
+
+const sentences = [
+  [
+    "In the heart of Russia, where the majestic Ural Mountains meet the sky, a young Sokolovski found her calling. Inspired by the passionate educators at her Specialized French Gymnasium, she dreamt of a life filled with knowledge and the joy of teaching. She embarked on a journey at the Ural State Pedagogical University, delving into the world of language and literature. It was a world full of possibilities!",
+  ],
+  [
+    "Life took an unexpected turn, leading Sokolovski to the bustling streets of New York City. She began her teaching career, but her heart yearned to share her deep love for her homeland. Fate smiled upon her when she landed a position teaching Russian at Brooklyn Tech, fulfilling her dream and allowing her to introduce American students to the rich tapestry of Russian language and culture.",
+  ],
+  [
+    "For Sokolovski, teaching Russian was far more than grammar and vocabulary drills. It was about witnessing the spark of understanding in her students' eyes, the joy of discovering a new world. The heartfelt thank-you notes and stories from former students, recounting how her lessons had broadened their horizons and shaped their lives, were her most cherished rewards.",
+  ],
+  [
+    "Sokolovski believed in creating a positive and encouraging environment for her students. She knew that mistakes were just stepping stones on the path to learning. With patience and understanding, she guided her students through the intricacies of the Russian language, offering extra help and showing them that progress was more important than perfection. She also believed in making memories, capturing moments of laughter and learning in class photos and videos.",
+  ],
+  [
+    "Art was another of Sokolovski's passions. She was particularly drawn to the vibrant colors and emotions of Impressionism. Sokolovski found joy in sharing her love for art with her students, incorporating paintings into her lessons to bring Russian culture to life. The stories behind the artists and their masterpieces fascinated her, and she made sure her students learned not only the language but also the artistic soul of Russia.",
+  ],
+  [
+    "Sokolovski's teaching career was filled with memorable moments: surprise birthday flowers from her students, heartfelt thank-you cards, and lively end-of-year celebrations at 'Elena's Café.' She also cherished the opportunity to chaperone students on an exchange program to Russia, where they experienced the culture firsthand and forged lifelong friendships.",
+  ],
+  [
+    "Sokolovski's thirst for knowledge led her to earn two master's degrees in education. She also proudly supervised the Art Club and Maker Space project, where students could unleash their creativity under the guidance of a resident artist. She was proud of the many creative projects they had accomplished together.",
+  ],
+  [
+    "Sokolovski believed in the power of optimism. Her positive energy and encouraging spirit radiated throughout her classroom and life. She often quoted Mary Lou Retton's words: 'Optimism is a happiness magnet. If you stay positive, good things and good people will be drawn to you.'",
+  ],
+  [
+    "Sokolovski's special message is simple yet profound: 'Live and learn.' Embrace the journey of continuous learning, explore the world with an open mind, and never lose your curiosity.",
+  ],
+  [
+    "As Sokolovski would say, 'На здоровье!' Cheers to life, learning, and all the exciting adventures that await us!",
+  ],
+];
+
+const images = [
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+  "https://via.placeholder.com/300x400",
+];
+
+const letterVariants = {
+  hidden: { opacity: 0, x: 50, filter: "blur(4px)" },
+  visible: (i) => ({
+    opacity: 1,
+    x: 0,
+    filter: "blur(0px)",
+    transition: {
+      delay: i * 0.05,
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  }),
 };
 
-const curtainContainerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.5 } },
-  exit: { opacity: 0, transition: { duration: 0.5 } },
+const sentenceVariants = {
+  hidden: { opacity: 0, x: 50, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    x: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+  exit: {
+    opacity: 0,
+    x: -50,
+    filter: "blur(4px)",
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
 };
 
 const LifeStory = () => {
   const [visibleSentences, setVisibleSentences] = useState([]);
   const [currentPart, setCurrentPart] = useState(1);
   const [showButton, setShowButton] = useState(false);
-  const [curtainVisible, setCurtainVisible] = useState(false);
-
-  const sentences = [sentencesPart1, sentencesPart2, sentencesPart3, sentencesPart4, sentencesPart5];
+  const [fadeOutCurrent, setFadeOutCurrent] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -160,7 +299,10 @@ const LifeStory = () => {
           if (currentPart < sentences.length) setShowButton(true);
           return prevVisibleSentences;
         }
-        return [...prevVisibleSentences, currentSentences[prevVisibleSentences.length]];
+        return [
+          ...prevVisibleSentences,
+          currentSentences[prevVisibleSentences.length],
+        ];
       });
     }, 5000);
 
@@ -169,88 +311,126 @@ const LifeStory = () => {
 
   const handleNextPart = () => {
     setShowButton(false);
-    setCurtainVisible(true);
+    setFadeOutCurrent(true);
     setTimeout(() => {
-      setCurtainVisible(false);
+      setFadeOutCurrent(false);
       setVisibleSentences([]);
       setCurrentPart(currentPart + 1);
-    }, 500); 
+      gsap.fromTo(
+        `.image-frame-${currentPart}`,
+        { opacity: 0, y: "100%" },
+        { opacity: 1, y: 0, duration: 1 }
+      );
+    }, 500);
   };
 
   const handlePreviousPart = () => {
     setShowButton(false);
-    setCurtainVisible(true);
+    setFadeOutCurrent(true);
     setTimeout(() => {
-      setCurtainVisible(false);
+      setFadeOutCurrent(false);
       setVisibleSentences([]);
       setCurrentPart(currentPart - 1);
-    }, 500); 
+    }, 500);
   };
 
   return (
     <>
       <NavBar />
       <Container>
-        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet" />
-        {Array.from({ length: 100 }).map((_, i) => (
-          <Star key={i} />
-        ))}
-        <Title>SOKOS nature</Title>
-        <AnimatePresence>
-          {visibleSentences.map((sentence, index) => (
-            <SentenceContainer
+        <ImageContainer>
+          {images.slice(0, currentPart).map((image, index) => (
+            <ImageFrame
               key={index}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={sentenceVariants}
+              className={`image-frame-${index + 1} ${
+                index + 1 === currentPart && fadeOutCurrent ? "fade-out" : ""
+              }`}
             >
-              {sentence.split('').map((letter, i) => (
-                <motion.span key={`${index}-${i}`} custom={i} variants={letterVariants}>
-                  {letter}
-                </motion.span>
-              ))}
-            </SentenceContainer>
+              <Image src={image} alt={`Life story ${index + 1}`} />
+            </ImageFrame>
           ))}
-        </AnimatePresence>
-        {showButton && currentPart < sentences.length && (
-          <AnimatePresence>
-            <Button
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={curtainVariants}
-              onClick={handleNextPart}
+          {!fadeOutCurrent && (
+            <ImageFrame
+              key={currentPart}
+              className={`image-frame-${currentPart}`}
             >
-              Continue the Story
-            </Button>
-          </AnimatePresence>
-        )}
-        {showButton && currentPart > 1 && (
-          <AnimatePresence>
-            <Button
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={curtainVariants}
-              onClick={handlePreviousPart}
-            >
-              Previous Part
-            </Button>
-          </AnimatePresence>
-        )}
-        <AnimatePresence>
-          {curtainVisible && (
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={curtainContainerVariants}
-              style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: '#fff' }}
-            />
+              <Image
+                src={images[currentPart - 1]}
+                alt={`Life story ${currentPart}`}
+              />
+            </ImageFrame>
           )}
-        </AnimatePresence>
-        <div style={{ height: '1200px' }} />
+        </ImageContainer>
+        <TextContainer>
+          <Title>
+            Episode {currentPart}: {titles[currentPart - 1]}
+          </Title>
+          <AnimatePresence>
+            {visibleSentences.map((sentence, index) => (
+              <SentenceContainer
+                key={index}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={sentenceVariants}
+              >
+                {sentence.split("").map((letter, i) => (
+                  <motion.span
+                    key={`${index}-${i}`}
+                    custom={i}
+                    variants={letterVariants}
+                  >
+                    {letter}
+                  </motion.span>
+                ))}
+              </SentenceContainer>
+            ))}
+          </AnimatePresence>
+          {showButton && currentPart < sentences.length && (
+            <AnimatePresence>
+              <ArtisticButton
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                onClick={handleNextPart}
+              >
+                Continue the Story
+              </ArtisticButton>
+            </AnimatePresence>
+          )}
+          {showButton && currentPart > 1 && (
+            <AnimatePresence>
+              <ArtisticButton
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                onClick={handlePreviousPart}
+              >
+                Previous Part
+              </ArtisticButton>
+            </AnimatePresence>
+          )}
+        </TextContainer>
+        {Array.from({ length: 100 }).map((_, index) => (
+          <Confetti
+            key={index}
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 10}s`,
+            }}
+          />
+        ))}
+        {Array.from({ length: 50 }).map((_, index) => (
+          <FlyingEmoji
+            key={index}
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 10}s`,
+            }}
+          >
+            {emojis[Math.floor(Math.random() * emojis.length)]}
+          </FlyingEmoji>
+        ))}
       </Container>
     </>
   );
