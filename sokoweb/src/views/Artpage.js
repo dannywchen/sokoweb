@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { gsap } from "gsap";
 import { FaTimes } from "react-icons/fa";
 import NavBar from "../components/NavBar";
 
@@ -77,7 +76,7 @@ const Title = styled.h2`
   font-size: 1.5rem;
   margin: 10px;
   text-align: center;
-  font-family: "Cinzel", serif;
+  font-family: 'Cinzel', serif;
 `;
 
 const Description = styled.p`
@@ -132,36 +131,12 @@ const CloseButton = styled(FaTimes)`
 `;
 
 const images = [
-  {
-    src: "https://via.placeholder.com/300x400",
-    title: "Art Title 1",
-    description: "This is a description for Art Title 1",
-  },
-  {
-    src: "https://via.placeholder.com/300x400",
-    title: "Art Title 2",
-    description: "This is a description for Art Title 2",
-  },
-  {
-    src: "https://via.placeholder.com/300x400",
-    title: "Art Title 3",
-    description: "This is a description for Art Title 3",
-  },
-  {
-    src: "https://via.placeholder.com/300x400",
-    title: "Art Title 4",
-    description: "This is a description for Art Title 4",
-  },
-  {
-    src: "https://via.placeholder.com/300x400",
-    title: "Art Title 5",
-    description: "This is a description for Art Title 5",
-  },
-  {
-    src: "https://via.placeholder.com/300x400",
-    title: "Art Title 6",
-    description: "This is a description for Art Title 6",
-  },
+  { src: "https://via.placeholder.com/300x400", title: "Art Title 1", description: "This is a description for Art Title 1" },
+  { src: "https://via.placeholder.com/300x400", title: "Art Title 2", description: "This is a description for Art Title 2" },
+  { src: "https://via.placeholder.com/300x400", title: "Art Title 3", description: "This is a description for Art Title 3" },
+  { src: "https://via.placeholder.com/300x400", title: "Art Title 4", description: "This is a description for Art Title 4" },
+  { src: "https://via.placeholder.com/300x400", title: "Art Title 5", description: "This is a description for Art Title 5" },
+  { src: "https://via.placeholder.com/300x400", title: "Art Title 6", description: "This is a description for Art Title 6" },
 ];
 
 const ArtPage = () => {
@@ -186,19 +161,15 @@ const ArtPage = () => {
       <Container>
         {images.map((image, index) => (
           <Card key={index}>
-            <Image
-              src={image.src}
-              alt={image.title}
-              onClick={() => openModal(image)}
-            />
+            <Image src={image.src} alt={image.title} onClick={() => openModal(image)} />
             <Title>{image.title}</Title>
             <Description>{image.description}</Description>
           </Card>
         ))}
       </Container>
       {selectedImage && (
-        <Modal className={isZoomingOut ? "fade-out" : ""}>
-          <ModalContent className={isZoomingOut ? "zoom-out" : ""}>
+        <Modal className={isZoomingOut ? 'fade-out' : ''}>
+          <ModalContent className={isZoomingOut ? 'zoom-out' : ''}>
             <ModalImage src={selectedImage.src} alt={selectedImage.title} />
             <CloseButton onClick={closeModal} />
           </ModalContent>
